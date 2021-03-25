@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Rhosung Socket Example</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <div class="container mt-5">
+            <div class="row justify-content-center mt-5">
+                <h1> Simple Chat with Node JS Rhosung Park </h1>
+            </div>
+        
+            <div class="row mt-5">
+                <div class="col">
+                    <div class="form-group">
+                        <input id="nickText" type="text" class="form-control" placeholder="Your Nickname." />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-block btn-info" id="nick">
+                            Set Nick Name
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <textarea id="message-area" style="background-color:white ;border: dashed 3px rgb(0, 192, 42); height: 400px" class="form-control" readonly></textarea>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="chatText" type="text" style="height:100px"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-block btn-success" id="chat"> Send Chat Message! </button>
+            </div>
+            <p>
+                
+            </p>
+        </div>
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var socket = io.connect();
+
+        socket.on('chat', (data)=>{
+            let msg = data.nick + ":" + data.message + "-- posted on:" + data.time;
+            $('#message-area').val($('#message-area').val() + msg + '\n');
+        })
+
+        $(()=>{
+            $('#nick').on('click',()=>{
+                console.log($('#nickText').val());
+                socket.emit('nick', $('#nickText').val());
+            })
+
+            $('#chat').on('click',()=>{
+                console.log($('#chatText').val());
+                socket.emit('chat', {message:$('#chatText').val()});
+                
+            })
+        })
+        
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>
